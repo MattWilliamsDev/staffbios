@@ -1,0 +1,59 @@
+define( function( require ) {
+	"use strict";
+	
+	var Marionette = require( 'marionette' );
+	var _          = require( 'underscore' );
+	var $          = require( 'jquery' );
+
+	var ModalRegion = Marionette.Region.extend({
+		onShow: function() {
+			this.$el.modal( this.options );
+			this.$el.modal( 'show' );
+		}
+
+		, onClose: function() {
+			if( Boolean( this.customClass ) ) {
+				// removing class if it was added before
+				this.$el.removeClass( this.customClass );
+				this.customClass = null;
+			}
+
+			this.$el.modal( 'hide' );
+			this.$el.data( 'modal', null );
+		}
+
+		, show: function( view, options, className ) {
+			this.options = options = options || view.modalOptions || {};
+
+			Marionette.Region.prototype.show.apply( this, [ view ] );
+
+			if( _.isNumber( parseInt( options.width, 10 ) ) ) {
+				options.marginLeft = Math.floor( -1 * parseInt( options.width, 10 ) / 2 );
+				if ( /%/.exec( options.width ) ) {
+					options.marginLeft += '%';
+				}
+			}
+
+			if( /%/.exec( options.height ) ) {
+				options.top = Math.min( 10, 50 - Math.floor( parseInt( options.height, 10 ) / 2 ) ) + '%';
+			}
+
+			// adding class name to modal if specificed
+			if( Boolean( className ) && typeof className === 'string' ) {
+				this.customClass = className;
+				this.$el.addClass( className );
+			}
+
+			this.$el.attr( 'style', '' );
+			this.$el.css( options );
+			this.$el.one( 'hidden', _.bind( this.close, this ) );
+
+			// if the view closes itself we should close the modal
+			this.listenToOnce( view, 'close', _.bind( function() {
+				Marionette.triggerMethod.call( this, 'close' );
+			}, this ) );
+		}
+	});
+
+	return ModalRegion;
+});

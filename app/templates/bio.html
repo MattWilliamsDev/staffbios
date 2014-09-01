@@ -1,0 +1,57 @@
+{{# if name }}
+<h2>{{ fullName }} <small>{{# each qualifications }}{{ . }} {{/ each }}</small></h2>
+
+<dl class="personal-bio">
+	<dt>Email</dt>
+	<dd>
+		<a class="email" href="mailto:{{ email }}">{{ email }}</a>
+	</dd>
+
+	<dt>Education</dt>
+	{{# with education }}
+	<dd>
+		{{ degree }}, {{ school }} - {{ year }}
+	</dd>
+	{{/ with }}
+
+	<dt>Registrations</dt>
+	{{# each registration }}
+	<dd>
+		{{ title }}{{# if state }}, {{ state }}{{/ if }}{{# if year }} - {{ year }}{{/ if }}
+	</dd>
+	{{/ each }}
+
+	<dt>Community Participation</dt>
+	{{# each participation }}
+	<dd>
+		{{ program }}{{# if year }}, {{ year }}{{/ if }}
+	</dd>
+	{{/ each }}
+
+	<dt>Significant Projects</dt>
+	{{# each projects }}
+	<dd>
+		<strong>{{{ name }}}</strong> - {{ location }}
+	</dd>
+	{{/ each }}
+
+	<dt>Design Awards</dt>
+	{{# each awards }}
+	<dd>
+		<strong>{{ name }}</strong><br>
+		{{{ project }}} - {{ year }}
+	</dd>
+	{{/ each }}
+
+	{{# if other }}
+		{{# each other }}
+		<dt>{{ category }}</dt>
+			{{# each items }}
+			<dd>{{ name }} - {{ location }} - {{ year }}</dd>
+			{{/ each }}
+		{{/ each }}
+	{{/ if }}
+</dl>
+{{ else }}
+<h3>Select a staff member on the left to see their information</h3>
+{{/ if }}
